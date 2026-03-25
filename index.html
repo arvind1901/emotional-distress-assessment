@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Distress Assessment</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🏥 Emotional Distress Assessment</h1>
+            <p class="subtitle">A confidential questionnaire to assess emotional wellbeing</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text" id="progressText">Step 1 of 5</p>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Section 1: Welcome & Age Verification -->
+            <section id="section-welcome" class="section active">
+                <div class="card">
+                    <h2>Welcome</h2>
+                    <p>This assessment helps evaluate emotional distress levels for cancer patients and their caregivers.</p>
+                    <p class="info-text">📋 The questionnaire takes approximately 5-10 minutes to complete.</p>
+                    <p class="info-text">🔒 All responses are confidential and used only for assessment purposes.</p>
+                    
+                    <div class="form-group">
+                        <label class="question-label">Are you 18 years or older? *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="age-verify" value="yes" required>
+                                <span>Yes, I am 18 or older</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="age-verify" value="no">
+                                <span>No, I am under 18</span>
+                            </label>
+                        </div>
+                        <div id="underage-message" class="error-message" style="display: none;">
+                            Sorry, you must be 18 or older to complete this assessment.
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="handleAgeVerification()">Continue</button>
+                </div>
+            </section>
+
+            <!-- Section 2: Basic Information -->
+            <section id="section-basic" class="section">
+                <div class="card">
+                    <h2>Basic Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="state">State of Residence *</label>
+                        <select id="state" class="form-control" required>
+                            <option value="">Select your state</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="question-label">I am: *</label>
+                        <div class="radio-group">
+                            <label class="radio-label role-option">
+                                <input type="radio" name="role" value="patient" required>
+                                <span>👤 The Patient</span>
+                            </label>
+                            <label class="radio-label role-option">
+                                <input type="radio" name="role" value="caregiver">
+                                <span>🤝 A Caregiver / Family Member</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="previousSection()">Back</button>
+                        <button class="btn btn-primary" onclick="handleRoleSelection()">Continue</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Demographics -->
+            <section id="section-demographics" class="section">
+                <div class="card">
+                    <h2>Personal Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="age-group">Age Group *</label>
+                        <select id="age-group" class="form-control" required>
+                            <option value="">Select age group</option>
+                            <option value="1">18-29 years</option>
+                            <option value="2">30-39 years</option>
+                            <option value="3">40-49 years</option>
+                            <option value="4">50-59 years</option>
+                            <option value="5">60+ years</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="question-label">Gender *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="0" required>
+                                <span>Female</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="1">
+                                <span>Male</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Caregiver-specific fields -->
+                    <div id="caregiver-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="relation">Relation to Patient</label>
+                            <select id="relation" class="form-control">
+                                <option value="">Select relation</option>
+                                <option value="spouse">Spouse</option>
+                                <option value="parent">Parent</option>
+                                <option value="child">Child</option>
+                                <option value="sibling">Sibling</option>
+                                <option value="friend">Friend</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="question-label">Is the patient currently alive? *</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="patient-alive" value="yes">
+                                    <span>Yes</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="patient-alive" value="no">
+                                    <span>No</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="death-date-field" class="form-group" style="display: none;">
+                            <label for="death-date">Date of Death (MM/YYYY)</label>
+                            <input type="month" id="death-date" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <!-- Medical Information (for both) -->
+                    <div class="form-group">
+                        <label for="diagnosis-date">
+                            <span id="diagnosis-label">Diagnosis Date (MM/YYYY) *</span>
+                        </label>
+                        <input type="month" id="diagnosis-date" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cancer-type">
+                            <span id="cancer-type-label">Cancer Type *</span>
+                        </label>
+                        <select id="cancer-type" class="form-control" required>
+                            <option value="">Select cancer type</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="treatment-types">Treatment Types Received (Select all that apply) *</label>
+                        <div id="treatment-types" class="checkbox-group">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ngo-help">NGO/Support Organization Help Received *</label>
+                        <select id="ngo-help" class="form-control" required>
+                            <option value="">Select option</option>
+                            <option value="complete">Complete Support</option>
+                            <option value="partial">Partial Support</option>
+                            <option value="none">No Support</option>
+                        </select>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="previousSection()">Back</button>
+                        <button class="btn btn-primary" onclick="validateDemographics()">Continue</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Questionnaire -->
+            <section id="section-questionnaire" class="section">
+                <div class="card">
+                    <h2 id="questionnaire-title">Assessment Questions</h2>
+                    <p class="info-text">Please rate each statement based on your experience over the past month.</p>
+                    
+                    <div class="scale-legend">
+                        <div class="scale-item">
+                            <span class="scale-number">1</span>
+                            <span class="scale-label">Not at all</span>
+                        </div>
+                        <div class="scale-item">
+                            <span class="scale-number">2</span>
+                            <span class="scale-label">Slightly</span>
+                        </div>
+                        <div class="scale-item">
+                            <span class="scale-number">3</span>
+                            <span class="scale-label">Moderately</span>
+                        </div>
+                        <div class="scale-item">
+                            <span class="scale-number">4</span>
+                            <span class="scale-label">Quite a bit</span>
+                        </div>
+                        <div class="scale-item">
+                            <span class="scale-number">5</span>
+                            <span class="scale-label">Extremely</span>
+                        </div>
+                    </div>
+                    
+                    <div id="questions-container">
+                        <!-- Questions will be populated dynamically -->
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="previousSection()">Back</button>
+                        <button class="btn btn-primary" onclick="submitAssessment()">Submit Assessment</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Results -->
+            <section id="section-results" class="section">
+                <div class="card">
+                    <div id="results-content">
+                        <!-- Results will be populated dynamically -->
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="resetAssessment()">Start New Assessment</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyzing your responses...</p>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 Emotional Distress Assessment System | Confidential & Secure</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
