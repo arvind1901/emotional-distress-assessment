@@ -1,5 +1,5 @@
 # Vercel Deployment TODO
-Status: [x] Complete - All files ready!
+Status: [x] Fixed vercel.json (removed conflicting 'functions', optimized routes/static) - Ready!
 
 ## Steps from Approved Plan
 
